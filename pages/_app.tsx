@@ -1,13 +1,16 @@
-import type { AppProps } from "next/app";
+import { AppProps } from "next/app";
 import { Provider } from "react-redux";
-import configureStore from "../store";
-
-const store = configureStore();
+import "tailwindcss/tailwind.css";
+import Layout from "../components/Layout";
+import { useStore } from "../store";
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
+    const store = useStore(pageProps.initialReduxState);
     return (
         <Provider store={store}>
-            <Component {...pageProps} />;
+            <Layout title="Crehana countries">
+                <Component {...pageProps} />
+            </Layout>
         </Provider>
     );
 };

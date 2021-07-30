@@ -1,8 +1,9 @@
 import React, { ReactNode } from "react";
-import Link from "next/link";
 import Head from "next/head";
-import { useDispatch, useSelector } from "react-redux";
-import { getAllCountries } from "../store/actions/countries.actions";
+import Header from "./Header";
+import { useSelector } from "react-redux";
+import { AppStore } from "../store/types/AppStore";
+import Loader from "./Loader";
 
 type Props = {
     children?: ReactNode;
@@ -10,10 +11,9 @@ type Props = {
 };
 
 const Layout = ({ children, title = "This is the default title" }: Props) => {
-    const { countries } = useSelector((state: any) => state);
-    const dispatch = useDispatch();
+    const { bg_clasic } = useSelector((state: AppStore) => state.config);
     return (
-        <div>
+        <div className={`${bg_clasic}`}>
             <Head>
                 <title>{title}</title>
                 <meta charSet="utf-8" />
@@ -22,37 +22,11 @@ const Layout = ({ children, title = "This is the default title" }: Props) => {
                     content="initial-scale=1.0, width=device-width"
                 />
             </Head>
-            <header>
-                <nav>
-                    <Link href="/">
-                        <a>Home</a>
-                    </Link>{" "}
-                    |{" "}
-                    <Link href="/about">
-                        <a>About</a>
-                    </Link>{" "}
-                    |{" "}
-                    <Link href="/users">
-                        <a>Users List</a>
-                    </Link>{" "}
-                    | <a href="/api/users">Users API</a>
-                </nav>
-            </header>
-            {children}
-            <footer>
-                <hr />
-                {countries}
-                <div
-                    style={{ color: "red" }}
-                    onClick={() => {
-                        dispatch(getAllCountries("jajaja"));
-                    }}
-                >
-                    cambia
-                </div>
-                <br />
-                <span>I'm here to stay (Footer)</span>
-            </footer>
+            <div className="sticky top-0">
+                <Loader />
+                <Header />
+            </div>
+            <div className="container mx-auto">{children}</div>
         </div>
     );
 };

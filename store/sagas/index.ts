@@ -1,9 +1,7 @@
-import * as countriesSaga from "./countries.saga";
+import { countriesSaga } from "./countries.saga";
+import { configSaga } from "./config.saga";
+import { all } from "redux-saga/effects";
 
-const initSagas = (sagaMiddleware: any) => {
-    Object.values(countriesSaga).forEach(
-        sagaMiddleware.run.bind(sagaMiddleware)
-    );
-};
-
-export default initSagas;
+export default function* initSagas() {
+    yield all([...configSaga, ...countriesSaga]);
+}
