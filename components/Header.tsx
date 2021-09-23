@@ -1,15 +1,5 @@
-import { Fragment } from "react";
-import { Popover, Transition } from "@headlessui/react";
-import {
-    MenuIcon,
-    PhoneIcon,
-    PlayIcon,
-    UserGroupIcon,
-    LocationMarkerIcon,
-    CurrencyDollarIcon,
-    AdjustmentsIcon,
-    XIcon,
-} from "@heroicons/react/outline";
+import { useRef } from "react";
+import { Popover } from "@headlessui/react";
 import DarkSwitch from "./DarkSwitch";
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
@@ -17,36 +7,22 @@ import { AppStore } from "../store/types/AppStore";
 import Search from "./header/Search";
 import DropMobile from "./header/DropMobile";
 import { setOneCountry } from "../store/actions/countries.actions";
-import Dropdown from "./Dropdown";
-
-const solutions = [
-    {
-        name: "Idiomas",
-        description:
-            "Get a better understanding of where your traffic is coming from.",
-        href: "#",
-        icon: UserGroupIcon,
-    },
-    {
-        name: "Currency",
-        description:
-            "Speak directly to your customers in a more meaningful way.",
-        href: "#",
-        icon: CurrencyDollarIcon,
-    },
-    {
-        name: "Continente",
-        description: "Your customers' data will be safe and secure.",
-        href: "#",
-        icon: LocationMarkerIcon,
-    },
-];
 
 export default function Header() {
     const { bg_clasic, text_grey } = useSelector(
         (state: AppStore) => state.config
     );
     const dispatch = useDispatch();
+    let searchRef = useRef(null);
+
+    const openDropMobile = () => {
+        console.log("esto funka?");
+        setTimeout(() => {
+            console.log("reff", searchRef.current);
+            searchRef.current.focus();
+        }, 500);
+    };
+
     return (
         <Popover className={`relative ${bg_clasic}`}>
             {({ open }) => (
@@ -70,7 +46,10 @@ export default function Header() {
                                     </a>
                                 </Link>
                             </div>
-                            <div className="-mr-2 -my-2 md:hidden">
+                            <div
+                                className="-mr-2 -my-2 md:hidden"
+                                onClick={openDropMobile}
+                            >
                                 <Popover.Button className="bg-white border rounded-md p-2 mr-2 inline-flex items-center justify-center text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
                                     <span className="sr-only">Open menu</span>
                                     {/*
@@ -90,13 +69,13 @@ export default function Header() {
                                     </svg>
                                 </Popover.Button>
                             </div>
-                            <Search />
+                            <Search ref={searchRef} />
                             <div className="hidden md:flex items-center justify-end md:flex-1 lg:w-0">
                                 <DarkSwitch />
                             </div>
                         </div>
                     </div>
-                    <DropMobile items={solutions} open={open} />
+                    <DropMobile open={open} />
                 </>
             )}
         </Popover>

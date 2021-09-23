@@ -10,7 +10,7 @@ type Props = {
     title?: string;
 };
 
-const Layout = ({ children, title = "This is the default title" }: Props) => {
+const Layout = ({ children, title = "Crehana countries" }: Props) => {
     const { bg_clasic } = useSelector((state: AppStore) => state.config);
     return (
         <div className={`${bg_clasic}`}>

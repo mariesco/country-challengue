@@ -1,6 +1,13 @@
 import { AdjustmentsIcon } from "@heroicons/react/outline";
 import { useRouter } from "next/router";
-import { ChangeEventHandler, FC, useEffect, useState } from "react";
+import {
+    ChangeEventHandler,
+    forwardRef,
+    Ref,
+    useEffect,
+    useImperativeHandle,
+    useState,
+} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
     searchCountries,
@@ -9,7 +16,13 @@ import {
 import { AppStore } from "../../store/types/AppStore";
 import Dropdown from "../Dropdown";
 
-const Search: FC = () => {
+type Props = {
+    mobile?: boolean;
+};
+
+type InnerRef = HTMLInputElement;
+
+const Search = forwardRef(({ mobile = false }:Props, ref:Ref<InnerRef>) => {
     const { config } = useSelector((state: AppStore) => state);
     const { bg_clasic, text_clasic, text_grey } = config;
     const dispatch = useDispatch();
@@ -21,6 +34,10 @@ const Search: FC = () => {
     const onChange: ChangeEventHandler<HTMLInputElement> = (e) => {
         setSearch(e.target.value);
     };
+
+    //useImperativeHandle(ref, () => {
+    //return {};
+    //});
 
     useEffect(() => {
         const timeOutId = setTimeout(() => {
@@ -57,12 +74,17 @@ const Search: FC = () => {
 
     return (
         <>
-            <div className="hidden md:flex font-sans text-black flex items-center justify-center">
+            <div
+                className={`${
+                    mobile ? "flex md:hidden" : "hidden md:flex"
+                } font-sans text-black flex items-center justify-center`}
+            >
                 <div className="border rounded-3xl overflow-hidden flex">
                     <input
                         type="text"
                         className={`focus:outline-none px-4 py-2 ${bg_clasic} ${text_clasic}`}
                         placeholder="Search..."
+                        ref={ref}
                         value={search}
                         onChange={onChange}
                     />
@@ -83,6 +105,6 @@ const Search: FC = () => {
             <Dropdown Icon={AdjustmentsIcon} />
         </>
     );
-};
+});
 
 export default Search;
